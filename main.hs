@@ -5,37 +5,58 @@ binaryToDecimal i = 2 * binaryToDecimal(div i 10) + (mod i 10)
 
 -- takes a list of binary numbers and returns their decimal sum
 addBinary :: [Int] -> Int
-addBinary a = sum [binaryToDecimal x | x <- a]
+addBinary a = sum (map binaryToDecimal a)
 
 {-- takes a list of any type and returns the last element of the list. 
     If the list is empty, display a clear error message using the error function --}
--- last' :: [a] -> a
+last' :: [a] -> a
+last' (x:[]) = x
+last' (x:xs) = last' xs
 
 {-- returns the list without the last element. If the list is empty, display an 
     error using the error function. Don’t use the built-in function init --}
--- init' :: [a] -> [a]
+init' :: [a] -> [a]
+init' (x:[]) = []
+init' (x:xs) = x : init' xs
 
 {-- When given a list of Char (a string) returns true if the elements are the 
     same forward as backward.--}
--- palindrome :: [Char] -> Bool
+palindrome :: [Char] -> Bool
+palindrome [] = True
+palindrome (x:xs)
+    | x /= last' xs = False
+    | otherwise  = palindrome (init' xs)
 
 {-- Takes a function and a list and returns a list that contains the items of 
     the original list except for those where the function returns True. In other 
     words, removes all items from the list where the function returns True--}
--- filterOut :: (a -> Bool) -> [a] -> [a]
+filterOut :: (a -> Bool) -> [a] -> [a]
+filterOut f [] = []
+filterOut f (x:xs)
+    | f x = filterOut f xs
+    | otherwise = x : filterOut f xs
 
 {-- Takes an Int (n) and a function and returns a list that contains the result 
     of the function applied to the numbers 0 through n-1 --}
--- nTimes :: Int -> (Int -> Int) -> [Int]
+nTimes :: Int -> (Int -> Int) -> [Int]
+nTimes n f = map f [0..n-1]
 
 {-- Takes a function and a list and returns the number of elements in the list 
     for which the function returns True --}
--- count :: (a -> Bool) -> [a] -> Int
+count :: (a -> Bool) -> [a] -> Int
+count f [] = 0
+count f (x:xs)
+    | f x = 1 + count f xs
+    | otherwise = count f xs
 
 {-- Takes an orderable type value and a sorted list and returns a sorted list 
     with the first argument inserted into the list at an appropriate location such 
     that the list is still sorted. --}
--- insert :: (Ord a) => a -> [a] -> [a]
+insert :: (Ord a) => a -> [a] -> [a]
+insert p [] = p : []
+insert p (x:xs)
+    | p < x = p : x : xs
+    | otherwise = x : insert p xs
 
 {-- Takes a list of orderable elements, sorts the elements, and returns the 
     sorted list. This must use the standard insertion sort algorithm (without loops). 
@@ -51,33 +72,56 @@ addBinary a = sum [binaryToDecimal x | x <- a]
     length. The combine function will return a new list that is the same length as the 
     shorter of the two lists, and contains the results of the function applied to 
     corresponding elements of the two lists. --}
--- combine :: (a -> a -> a) -> [a] -> [a] -> [a]
+combine :: (a -> a -> a) -> [a] -> [a] -> [a]
+combine f x [] = []
+combine f [] y = []
+combine f (x:xs) (y:ys) = f x y : combine f xs ys
+    
 
 {-- This function finds the minimum value in a list of orderable values. Note that 
     for this problem your code must be efficient. In order to make it efficient, you 
     may need to use a where clause. If it takes a noticeable amount of time on the long 
     example below, it is not efficient enough. --}
 -- minimum' :: (Ord a) => [a] -> a
+-- minimum' (x:[]) = x
+-- minimum' (x:xs)
+--     | x 
 
 {-- Takes a list of Bool and returns True if all of the values of the list are True. 
     If the list is empty, return True. (Do not use the built in function and.) --}
--- allTrue :: [Bool] -> Bool
+allTrue :: [Bool] -> Bool
+allTrue [] = True
+allTrue (x:[]) = True
+allTrue (x:y:ys)
+    | x /= y = False
+    | otherwise = allTrue (y:ys)
 
 {-- Takes an integer and a single value and produces a list of that value repeated n 
     times where n is the first argument. Do not use the built in function replicate. --}
--- replicate' :: Int -> a -> [a]
+replicate' :: Int -> a -> [a]
+replicate' 0 x = []
+replicate' n x = x : replicate' (n - 1) x
 
 {-- Takes a list of strings and returns a list containing the lengths of each string. 
     You may use the built-in functions map and length. --}
--- lengths :: [[Char]] -> [Int]
+lengths :: [[Char]] -> [Int]
+lengths x = map length x
+
 
 {-- Takes a list of integers and returns a list of lists. Each list in the return 
     value is a list of the divisors of x where x is the corresponding value in the 
     parameter list. --}
--- divisors :: [Int] -> [[Int]]
+divisors :: [Int] -> [[Int]]
+divisors [] = []
+divisors n = map divisor n
+
+{-- Returns a list of divisors of an integer n--}
+divisor :: Int -> [Int]
+divisor n = [x | x <- [1..n], n `mod` x == 0]
 
 {-- Returns a list of Bool. Each element in the returned list is True if the 
     corresponding integer is prime. You can solve this without recursion using map 
     and a list comprehension. Think about a variation on the list comprehension from 
     the previous problem. --}
--- prime :: [Int] -> [Bool]
+prime :: [Int] -> [Bool]
+prime = map (\n -> length (divisor n) == 2)

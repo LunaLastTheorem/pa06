@@ -3,8 +3,9 @@
 or received any unauthorized help and I have not used AI in any way for this assignment.
 
 Name:           _________________________
-Sources:        _______________________________________________________
-Comments:       _______________________________________________________
+Sources:        
+https://stackoverflow.com/questions/42798257/add-a-element-at-the-end-of-list-in-haskell
+Comments:       
 
 Fill out all of the above before submitting your assignment.  
 
