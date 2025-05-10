@@ -5,17 +5,22 @@ binaryToDecimal i = 2 * binaryToDecimal(div i 10) + (mod i 10)
 
 -- takes a list of binary numbers and returns their decimal sum
 addBinary :: [Int] -> Int
-addBinary a = sum (map binaryToDecimal a)
+addBinary a = sum' (map binaryToDecimal a)
+    where
+     sum' [] = 0
+     sum' (x:xs) = x + sum' xs
 
 {-- takes a list of any type and returns the last element of the list. 
     If the list is empty, display a clear error message using the error function --}
 last' :: [a] -> a
+last' [] = error "please don't call with empty list"
 last' (x:[]) = x
 last' (x:xs) = last' xs
 
 {-- returns the list without the last element. If the list is empty, display an 
     error using the error function. Don’t use the built-in function init --}
 init' :: [a] -> [a]
+init' [] = error "please don't call with empty list"
 init' (x:[]) = []
 init' (x:xs) = x : init' xs
 
@@ -23,6 +28,7 @@ init' (x:xs) = x : init' xs
     same forward as backward.--}
 palindrome :: [Char] -> Bool
 palindrome [] = True
+palindrome (x:[]) = True;
 palindrome (x:xs)
     | x /= last' xs = False
     | otherwise  = palindrome (init' xs)
@@ -65,7 +71,12 @@ insert p (x:xs)
     the list growing from the right end of the list instead of the left, and 
     inserting into the list on the right instead of the left. Use the cons 
     operator (:), not the append ++ operator. --}
--- insertionSort :: (Ord a) => [a] -> [a]
+insertionSort :: (Ord a) => [a] -> [a]
+insertionSort [] = []
+insertionSort (x:[]) = [x]
+insertionSort (x:y:ys)
+    | y < x = insert y (insertionSort (x:ys))
+    | otherwise = x : insertionSort (y:ys)
 
 {-- Takes a function and two lists (in that order). The function (f) should take 
     two arguments and return a single value. The two lists do not have to be the same 
@@ -81,20 +92,32 @@ combine f (x:xs) (y:ys) = f x y : combine f xs ys
 {-- This function finds the minimum value in a list of orderable values. Note that 
     for this problem your code must be efficient. In order to make it efficient, you 
     may need to use a where clause. If it takes a noticeable amount of time on the long 
-    example below, it is not efficient enough. --}
--- minimum' :: (Ord a) => [a] -> a
--- minimum' (x:[]) = x
--- minimum' (x:xs)
---     | x 
+    example below, it is not efficient enough. If the list is empty, display an error 
+    message.--}
+minimum' :: (Ord a) => [a] -> a
+minimum' [] = error "please don't call with empty list"
+minimum' (x:[]) = x
+minimum' (x:xs) = min' x (minimum' xs)
+    where 
+     min' a b
+        | a < b = a
+        | otherwise = b
+
 
 {-- Takes a list of Bool and returns True if all of the values of the list are True. 
     If the list is empty, return True. (Do not use the built in function and.) --}
 allTrue :: [Bool] -> Bool
 allTrue [] = True
-allTrue (x:[]) = True
-allTrue (x:y:ys)
-    | x /= y = False
-    | otherwise = allTrue (y:ys)
+allTrue (x:xs)
+    | x == False = False
+    | otherwise = allTrue xs
+
+{-- Takes a list of Bool and returns True if any of the values of the list are True. If the list is empty, return False. (Do not use the built in function or). --}
+anyTrue :: [Bool] -> Bool
+anyTrue [] = False
+anyTrue (x:xs)
+    | x = True
+    | otherwise = anyTrue xs
 
 {-- Takes an integer and a single value and produces a list of that value repeated n 
     times where n is the first argument. Do not use the built in function replicate. --}
@@ -114,10 +137,7 @@ lengths x = map length x
 divisors :: [Int] -> [[Int]]
 divisors [] = []
 divisors n = map divisor n
-
-{-- Returns a list of divisors of an integer n--}
-divisor :: Int -> [Int]
-divisor n = [x | x <- [1..n], n `mod` x == 0]
+    where divisor n = [x | x <- [1..n], n `mod` x == 0]
 
 {-- Returns a list of Bool. Each element in the returned list is True if the 
     corresponding integer is prime. You can solve this without recursion using map 
@@ -125,3 +145,4 @@ divisor n = [x | x <- [1..n], n `mod` x == 0]
     the previous problem. --}
 prime :: [Int] -> [Bool]
 prime = map (\n -> length (divisor n) == 2)
+    where divisor n = [x | x <- [1..n], n `mod` x == 0]

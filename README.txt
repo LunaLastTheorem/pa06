@@ -2,10 +2,12 @@
 [ X ] By placing an X between the brackets ("checking" the box), I affirm that I have not given
 or received any unauthorized help and I have not used AI in any way for this assignment.
 
-Name:           _________________________
+Name:           David Luna Guitron
 Sources:        
-https://stackoverflow.com/questions/42798257/add-a-element-at-the-end-of-list-in-haskell
-Comments:       
+* https://www.geeksforgeeks.org/insertion-sort-algorithm/
+    * Just a refresher on how it works in procedual programming, and it gave me a way to start. 
+    
+Comments:       I was not sure which built-in functions I was allowed to use so I made my own for a couple of these
 
 Fill out all of the above before submitting your assignment.  
 
